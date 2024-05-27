@@ -1,3 +1,4 @@
+// Creating a store using reducer function to handle transitions
 function createStore(reducer) {
     let state;
     let listeners = [];
@@ -9,46 +10,48 @@ function createStore(reducer) {
       listeners.forEach(listener => listener());
     };
   
+    //Adding and removing a listener
     const subscribe = (listener) => {
-      listeners.push(listener);
+      listeners.push(listener); // Adding a listener
       return () => {
         listeners = listeners.filter(l => l !== listener);
       };
     };
   
-    dispatch({ type: '@@INIT' });
+    dispatch({ type: '@@INIT' }); //Initialising the state
   
-    return { getState, dispatch, subscribe };
+    return { getState, dispatch, subscribe };  
   }
-  
+  // Function containing calculation logic
   function counterReducer(state = { count: 0 }, action) {
     switch (action.type) {
       case 'ADD':
-        return { count: state.count + 1 };
-      case 'SUBTRACT':
-        return { count: state.count - 1 };
+        return { count: state.count + 1 };// Incrementing count
+      case 'SUBTRACT': 
+        return { count: state.count - 1 };// Decrementing count
       case 'RESET':
-        return { count: 0 };
+        return { count: 0 }; //Resetting the count to 0
       default:
         return state;
     }
   }
-  
+  // Store with the counter reducer
   const store = createStore(counterReducer);
   
+  //Subscribing to store updates and logging new state
   store.subscribe(() => {
     console.log('State updated:', store.getState());
   });
   
-  // Scenario 1: Initial State Verification
+  // Initial State Verification
   console.log('Initial State:', store.getState());  // Should log: { count: 0 }
   
-  // Scenario 2: Incrementing the Counter
+  // Incrementing the Counter
   store.dispatch({ type: 'ADD' });
   store.dispatch({ type: 'ADD' });
   
-  // Scenario 3: Decrementing the Counter
+  // Decrementing the Counter
   store.dispatch({ type: 'SUBTRACT' });
   
-  // Scenario 4: Resetting the Counter
+  //  Resetting the Counter
   store.dispatch({ type: 'RESET' });
